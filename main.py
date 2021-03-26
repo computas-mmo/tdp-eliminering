@@ -43,14 +43,14 @@ def process_page_xml(page) -> Optional[str]:
     diff = False
     # TDP Fragment -> MultiExcerpt Macro
     for macro in soup.find_all(name='ac:structured-macro', attrs={NAME: 'tdp-fragment'}):
-        macro[NAME] = 'multiexcerpt-macro'
+        macro[NAME] = 'multiexcerpt'
         macro.find(PARAMETER, attrs={NAME: 'key'})[NAME] = 'name'
 
         diff = True
 
     # TDP Fragment Include -> MultiExcerpt Include Macro
     for macro in soup.find_all(name='ac:structured-macro', attrs={NAME: 'tdp-fragment-include'}):
-        macro[NAME] = 'multiexcerpt-include-macro'
+        macro[NAME] = 'multiexcerpt-include'
         macro.find(PARAMETER, attrs={NAME: 'key'})[NAME] = 'name'
 
         # Optional panel argument for multiexcerpt-include-macro
@@ -64,6 +64,37 @@ def process_page_xml(page) -> Optional[str]:
                 tag.decompose()
 
         diff = True
+
+    """
+    =Skriptbytte makroer:
+
+    ==tdp-incoming-links => incoming-links
+    Må sjekke parameterne, men ellers ok. Potensielt bare bytte navn.
+
+    ==tdp-page-status => status
+    Ideelt sett: Bytte med Status macro. Det finnes et kommentarfelt som bør ses på å beholde innholdet i.
+
+    ==tdp-pagepropertiesreport => pagepropertiesreport
+    Ta med Ancestor, label, in space, og 'columns to show' om det ikke er mulig å bare få med alle
+
+    ==tdp-div => div Merk: for sideposisjonering
+    Høyre eller midstilt tekst skal beholdes. Noprint skal ignoreres, her skal selve makroen fjenres men innholdet beholdes.
+    Potensielt best å bare gjøre alt i skriptbytte, fremfor å ta med en skriptfjerningsmodul også her.
+
+    =Skriptfjerne makroer:
+
+    ==tdp-div MERK: For noprint, ikke for tekststilling! Potensielt ikke med i denne listen. Se over.
+
+    ==tdp-comment 
+
+    ==tdp-template-header
+
+    ==tdp-subpage-list
+
+    ==tdp-add-page-from-template-description
+
+    ==tdp-predefined-search
+    """
 
     return soup.decode_contents() if diff else None
 

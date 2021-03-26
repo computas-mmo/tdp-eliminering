@@ -4,8 +4,8 @@ This script uses the Confluence REST API to search for and replaces the followin
 
 | Search  | Replace |
 |:--- |:--- |
-|tdp-fragment|multiexcerpt-macro|
-|tdp-fragment-include|multiexcerpt-macro-include|
+|tdp-fragment|multiexcerpt|
+|tdp-fragment-include|multiexcerpt-include|
 
 ---
 
@@ -41,12 +41,13 @@ It is recommended to use this method
 
 ---
 
-### The major flaw with this method
+### Note
 
 Each macro has a unique ID. During replacement these id's are preserved. That is a tdp-fragment with ID: "ABC123" will be replace with a multiexcerpt with the same ID: "ABC123"
 This could lead to potential errors in the future, as I believe these ID's are generated and saved in the database that confluence is connected to. (I think this database is running on-premise).
 A more robust method of replacing these macros would be to look at the database tables and see how they are structured and make sure that this script runs without side effects 
 (or alternatively do the search / replace directly on the db)
+This is considered to be a low-risk behavior. No errors related to the recycling of these ID's were detected after the Domstoladministrasjonen migration.
 
 ### Future Work
 - Investigate the use of CQL (Confluence Query Language) instead of scraping every page in a space
