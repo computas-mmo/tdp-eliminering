@@ -18,6 +18,6 @@ with open("page.html") as page:
 
     if diff:
         print("Diff found, trying to update new_page.html")
-        open("new_page.html", "a").write(soup.decode())
+        open("new_page.html", "w").write(soup.decode(formatter="html"))
     else:
         print("No diff found, page is unchanged.")
