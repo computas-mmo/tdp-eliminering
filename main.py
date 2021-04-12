@@ -44,14 +44,14 @@ def process_page_xml(page) -> Optional[str]:
     # TDP Fragment -> MultiExcerpt Macro
     for macro in soup.find_all(name='ac:structured-macro', attrs={NAME: 'tdp-fragment'}):
         macro[NAME] = 'multiexcerpt'
-        macro.find(PARAMETER, attrs={NAME: 'key'})[NAME] = 'name'
+        macro.find(PARAMETER, attrs={NAME: 'key'})[NAME] = 'MultiExcerptName'
 
         diff = True
 
     # TDP Fragment Include -> MultiExcerpt Include Macro
     for macro in soup.find_all(name='ac:structured-macro', attrs={NAME: 'tdp-fragment-include'}):
         macro[NAME] = 'multiexcerpt-include'
-        macro.find(PARAMETER, attrs={NAME: 'key'})[NAME] = 'name'
+        macro.find(PARAMETER, attrs={NAME: 'key'})[NAME] = 'MultiExcerptName'
 
         # Optional panel argument for multiexcerpt-include-macro
         panel = macro.find(PARAMETER, attrs={NAME: 'panel'})
