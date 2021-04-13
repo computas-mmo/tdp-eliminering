@@ -9,12 +9,30 @@ with open("page.html") as page:
     soup = BeautifulSoup(page, "html.parser")
     print("open page.html")
     diff = False
-    for macro in soup.find_all(name=MACRO, attrs={NAME: "tdp-fragment"}):
-        print("do replacement of tdp-fragment")
-        # print(macro.prettify())
+    # TDP Fragment -> MultiExcerpt
+    for macro in soup.find_all(name='ac:structured-macro', attrs={NAME: 'tdp-fragment'}):
         macro[NAME] = 'multiexcerpt'
-        macro.find(PARAMETER, attrs={NAME: 'key'})[NAME] = 'name'
+        macro.find(PARAMETER, attrs={NAME: 'key'})[NAME] = 'MultiExcerptName'
+
         diff = True
+
+    # TDP Fragment Include -> MultiExcerpt Include
+    for macro in soup.find_all(name='ac:structured-macro', attrs={NAME: 'tdp-fragment-include'}):
+        macro[NAME] = 'multiexcerpt-include'
+        macro.find(PARAMETER, attrs={NAME: 'key'})[NAME] = 'MultiExcerptName'
+
+        # Optional panel argument for multiexcerpt-include
+        panel = macro.find(PARAMETER, attrs={NAME: 'panel'})
+        if panel is not None:
+            panel[NAME] = 'addpanel'
+
+        # Remove all other arguments
+        for option in ('header', 'pagecontext', 'text', 'searchable', 'expandrelative'):
+            for tag in macro.find_all(PARAMETER, attrs={NAME: option}):
+                tag.decompose()
+
+        diff = True
+
 
     if diff:
         print("Diff found, trying to update new_page.html")

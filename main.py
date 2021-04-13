@@ -41,19 +41,19 @@ def process_page_xml(page) -> Optional[str]:
     soup = BeautifulSoup(body, features='html.parser')
 
     diff = False
-    # TDP Fragment -> MultiExcerpt Macro
+    # TDP Fragment -> MultiExcerpt
     for macro in soup.find_all(name='ac:structured-macro', attrs={NAME: 'tdp-fragment'}):
         macro[NAME] = 'multiexcerpt'
         macro.find(PARAMETER, attrs={NAME: 'key'})[NAME] = 'MultiExcerptName'
 
         diff = True
 
-    # TDP Fragment Include -> MultiExcerpt Include Macro
+    # TDP Fragment Include -> MultiExcerpt Include
     for macro in soup.find_all(name='ac:structured-macro', attrs={NAME: 'tdp-fragment-include'}):
         macro[NAME] = 'multiexcerpt-include'
         macro.find(PARAMETER, attrs={NAME: 'key'})[NAME] = 'MultiExcerptName'
 
-        # Optional panel argument for multiexcerpt-include-macro
+        # Optional panel argument for multiexcerpt-include
         panel = macro.find(PARAMETER, attrs={NAME: 'panel'})
         if panel is not None:
             panel[NAME] = 'addpanel'
